@@ -44,6 +44,11 @@ class Game:
             return True
         else:
             return False
+    
+    def get_possible_moves(self):
+        
+        possible_moves = np.where(self.board[5] == 0)[0]
+        return possible_moves
         
     def draw(self):
         
@@ -113,10 +118,7 @@ class Game:
             print('The game is draw')
             return self.board
         
-        move = np.random.choice(np.arange(7))
-        
-        while not self.move_possible(move):
-            move = np.random.choice(np.arange(7))
+        move = np.random.choice(self.get_possible_moves())
         
         self.do_move(move, player)
         
