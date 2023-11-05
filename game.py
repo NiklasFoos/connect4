@@ -81,7 +81,6 @@ class Game:
                 board_help = self.board[row, column:column+4]
                 if abs(np.sum(board_help)) == 4:
                     self.winner = np.sign(board_help[0])
-                    print(f'Game Over ---- row {row+1}')
                     return True
                 
                 
@@ -91,7 +90,6 @@ class Game:
                 board_help = self.board.T[column, row: row+4]
                 if abs(np.sum(board_help)) == 4:
                     self.winner = np.sign(board_help[0])
-                    print(f'Game Over ---- column {column+1}')
                     return True
         
         # check diagonals:
@@ -103,11 +101,9 @@ class Game:
                 
                 if abs(trace) == 4:
                     self.winner = np.sign(trace)
-                    print('Game Over ---- diagonal')
                     return True
                 elif abs(trace_off) == 4:
                     self.winner = np.sign(trace_off)
-                    print('Game Over ---- diagonal')
                     return True
 
         return False
@@ -124,12 +120,12 @@ class Game:
         
     def do_rollout(self, start_player):
         
-        while not self.gameOver():
+        while not self.gameOver() and not self.draw():
             self.do_random_move(start_player)
-            if self.gameOver():
+            if self.gameOver() or self.draw():
                 return self.board
             self.do_random_move(start_player * -1)
-            if self.gameOver():
+            if self.gameOver() or self.draw():
                 return self.board
         
     def show_board(self):
@@ -163,12 +159,15 @@ class Game:
     
 if __name__ == '__main__':
     
-    g = Game()
+    draw = 0
+    while draw == 0:
+        g = Game()
+        g.do_rollout(1)
+        if g.draw():
+            draw = 1
     
-    
-    g.do_rollout(1)
-    print(f'the winner is {g.get_winner()}')
     g.show_board()
+    print(g.draw())
     
     
     
