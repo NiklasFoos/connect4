@@ -147,6 +147,7 @@ class Game:
         
         plt.xlim([-1, 7])
         plt.ylim([-1, 6])
+        plt.show()
             
             
                 
