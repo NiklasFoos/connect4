@@ -57,20 +57,20 @@ class Game:
         else:
             return False
         
-    def do_move(self, move, player):
+    def do_move(self, move):
         
         """
         Parameters
         -------------------
         move: number between 0 and 6 that denotes the column
-        player: 1 or -1 for eather of both players
         
         """
         
         if self.move_possible(move):          
             for row in range(6):
                 if self.board[row][move] == 0:
-                    self.board[row][move] = player
+                    self.board[row][move] = 1
+                    self.board = -self.board
                     break
     
     def gameOver(self):
@@ -108,7 +108,7 @@ class Game:
 
         return False
     
-    def do_random_move(self, player):
+    def do_random_move(self):
         
         if self.draw():
             print('The game is draw')
@@ -116,20 +116,17 @@ class Game:
         
         move = np.random.choice(self.get_possible_moves())
         
-        self.do_move(move, player)
+        self.do_move(move)
         
-    def do_rollout(self, start_player):
+    def do_rollout(self):
         
         while not self.gameOver() and not self.draw():
-            self.do_random_move(start_player)
-            if self.gameOver() or self.draw():
-                return self.board
-            self.do_random_move(start_player * -1)
+            self.do_random_move()
             if self.gameOver() or self.draw():
                 return self.board
         
     def show_board(self):
-        
+
         
         ax = plt.axes()
 
@@ -163,7 +160,7 @@ if __name__ == '__main__':
     draw = 0
     while draw == 0:
         g = Game()
-        g.do_rollout(1)
+        g.do_rollout()
         if g.draw():
             draw = 1
     
