@@ -17,20 +17,15 @@ class Game:
     """
     
     
-    def __init__(self):
+    def __init__(self, state = np.zeros((6,7))):
         
-        self.board = np.zeros((6,7))
-        self.winner = 0
-    
-    
+        self.board = state
+
     def get_board(self):
         
         return self.board
     
-    def get_winner(self):
-        
-        return self.winner
-    
+
     def set_board(self, position):
         
         if position.shape == (6,7):        
@@ -49,6 +44,9 @@ class Game:
         
         possible_moves = np.where(self.board[5] == 0)[0]
         return possible_moves
+
+    def initialize(self):
+        self.board = np.zeros((6,7))
         
     def draw(self):
         
@@ -80,7 +78,6 @@ class Game:
             for column in range(4):
                 board_help = self.board[row, column:column+4]
                 if abs(np.sum(board_help)) == 4:
-                    self.winner = np.sign(board_help[0])
                     return True
                 
                 
@@ -89,7 +86,6 @@ class Game:
             for row in range(3):
                 board_help = self.board.T[column, row: row+4]
                 if abs(np.sum(board_help)) == 4:
-                    self.winner = np.sign(board_help[0])
                     return True
         
         # check diagonals:
@@ -100,10 +96,8 @@ class Game:
                 trace_off = np.trace(np.flip(board_help, 0))
                 
                 if abs(trace) == 4:
-                    self.winner = np.sign(trace)
                     return True
                 elif abs(trace_off) == 4:
-                    self.winner = np.sign(trace_off)
                     return True
 
         return False
@@ -118,12 +112,14 @@ class Game:
         
         self.do_move(move)
         
-    def do_rollout(self):
-        
+    def do_rollout(self, player):
+        current_player = player
         while not self.gameOver() and not self.draw():
+
             self.do_random_move()
-            if self.gameOver() or self.draw():
-                return self.board
+            current_player *= -1
+
+        return current_player * -1
         
     def show_board(self):
 
@@ -156,16 +152,6 @@ class Game:
     
     
 if __name__ == '__main__':
-    
-    draw = 0
-    while draw == 0:
-        g = Game()
-        g.do_rollout()
-        if g.draw():
-            draw = 1
-    
-    g.show_board()
-    print(g.draw())
-    
+    print('This game is fun')
     
     
